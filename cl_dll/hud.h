@@ -94,6 +94,7 @@ struct HUDLIST {
 
 #include "hud_countdown.h"
 #include "hud_crosshairs.h"
+#include "hud_scores.h"
 #include "hud_ctf.h"
 #include "hud_debug.h"
 #include "hud_location.h"
@@ -665,6 +666,7 @@ public:
 	CHudTimer		m_Timer;
 	CHudVote		m_Vote;
 	CHudWatermark	m_Watermark;
+	ScoreTabs::ScoreList m_ScoreList;
 
 	void Init( void );
 	void VidInit( void );
