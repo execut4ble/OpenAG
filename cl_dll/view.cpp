@@ -90,6 +90,7 @@ cvar_t	*cl_bob;
 cvar_t	*cl_bobup;
 cvar_t	*cl_waterdist;
 cvar_t	*cl_chasedist;
+cvar_t  *r_weaponrecoil;
 
 // These cvars are not registered (so users can't cheat), so set the ->value field directly
 // Register these cvars in V_Init() if needed for easy tweaking
@@ -1692,7 +1693,10 @@ Client side punch effect
 */
 void V_PunchAxis( int axis, float punch )
 {
-	ev_punchangle[ axis ] = punch;
+    if (r_weaponrecoil->value != 0)
+    {
+        ev_punchangle[axis] = punch;
+    }
 }
 
 /*
@@ -1716,6 +1720,7 @@ void V_Init (void)
 	cl_bobup			= gEngfuncs.pfnRegisterVariable( "cl_bobup","0.5", 0 );
 	cl_waterdist		= gEngfuncs.pfnRegisterVariable( "cl_waterdist","4", 0 );
 	cl_chasedist		= gEngfuncs.pfnRegisterVariable( "cl_chasedist","112", 0 );
+	r_weaponrecoil     	= gEngfuncs.pfnRegisterVariable( "r_weaponrecoil","1", 0 );
 }
 
 
