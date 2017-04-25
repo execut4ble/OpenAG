@@ -34,6 +34,7 @@
 
 #include "forcemodel.h"
 #include "steam_id.h"
+#include "hud_scores.h"
 
 hud_player_info_t	 g_PlayerInfoList[MAX_PLAYERS+1];	   // player info from the engine
 extra_player_info_t  g_PlayerExtraInfo[MAX_PLAYERS+1];   // additional player info sent directly to the client dll
@@ -466,6 +467,7 @@ void CHud :: Init( void )
 	m_StatusIcons.Init();
 	m_Countdown.Init();
 	m_Crosshairs.Init();
+	m_ScoreList.Init();
 	m_CTF.Init();
 	m_Debug.Init();
 	m_Location.Init();
@@ -626,6 +628,7 @@ void CHud :: VidInit( void )
 	m_StatusIcons.VidInit();
 	m_Countdown.VidInit();
 	m_Crosshairs.VidInit();
+	m_ScoreList.VidInit();
 	m_CTF.VidInit();
 	m_Debug.VidInit();
 	m_Location.VidInit();
