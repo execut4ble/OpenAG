@@ -176,6 +176,15 @@ int CHud :: Redraw( float flTime, int intermission )
 			pList = pList->pNext;
 		}
 	}
+	else
+	{
+		// Hack to draw CHudCrosshairs even when hud_draw is 0.
+		if (!Bench_Active()
+			&& !intermission
+			&& !(m_iHideHUDDisplay & HIDEHUD_ALL)
+			&& m_Crosshairs.m_iFlags & HUD_ACTIVE)
+			m_Crosshairs.Draw(flTime);
+	}
 
 	// are we in demo mode? do we need to draw the logo in the top corner?
 	if (m_iLogo)
@@ -336,17 +345,6 @@ int CHud :: DrawHudNumber( int x, int y, int iFlags, int iNumber, int r, int g, 
 	return x;
 }
 
-static size_t count_digits(int n)
-{
-	size_t result = 0;
-
-	do {
-		++result;
-	} while ((n /= 10) != 0);
-
-	return result;
-}
-
 static constexpr int ten_powers[] = {
 	1,
 	10,
@@ -416,8 +414,20 @@ int CHud::GetNumWidth( int iNumber, int iFlags )
 
 int CHud::DrawHudStringCentered(int x, int y, char* string, int r, int g, int b)
 {
-	auto width = gEngfuncs.pfnDrawString(0, 0, string, 0, 0, 0);
+	auto width = GetHudStringWidth(string);
 	return x + gEngfuncs.pfnDrawString(x - width / 2, y, string, r, g, b);
+}
+
+int CHud::DrawHudStringRightAligned(int x, int y, char* string, int r, int g, int b)
+{
+	auto width = GetHudStringWidth(string);
+	gEngfuncs.pfnDrawString(x - width, y, string, r, g, b);
+	return x;
+}
+
+int CHud::GetHudStringWidth(char* string)
+{
+	return gEngfuncs.pfnDrawString(0, 0, string, 0, 0, 0);
 }
 
 // R, G, B.
@@ -474,8 +484,13 @@ int CHud::DrawHudStringWithColorTags(int x, int y, char* string, int r, int g, i
 
 int CHud::DrawHudStringCenteredWithColorTags(int x, int y, char* string, int r, int g, int b)
 {
-	auto width = gEngfuncs.pfnDrawString(0, 0, strip_color_tags_thread_unsafe(string), 0, 0, 0);
+	auto width = GetHudStringWidthWithColorTags(string);
 	return DrawHudStringWithColorTags(x - width / 2, y, string, r, g, b);
+}
+
+int CHud::GetHudStringWidthWithColorTags(const char* string)
+{
+	return gEngfuncs.pfnDrawString(0, 0, strip_color_tags_thread_unsafe(string), 0, 0, 0);
 }
 
 int CHud::DrawConsoleStringWithColorTags(int x, int y, char* string, bool use_default_color, float default_r, float default_g, float default_b)
